@@ -108,7 +108,6 @@ function createApp(opts?: { exemptPaths?: string[] }) {
   app.post('/auth/login/form', (c) => c.text('login-form'))
   app.post('/auth/register', (c) => c.text('register'))
   app.post('/auth/register/form', (c) => c.text('register-form'))
-  app.post('/auth/seed-admin', (c) => c.text('seed'))
   app.post('/auth/accept-invitation', (c) => c.text('accept'))
   app.post('/auth/reset-password', (c) => c.text('reset'))
   app.post('/forms/submit', (c) => c.text('form-submitted'))
@@ -344,18 +343,6 @@ describe('csrfProtection middleware', () => {
       const app = createApp()
       const res = await app.request(
         createReq('POST', '/auth/register', {
-          Cookie: 'auth_token=some-jwt',
-        }),
-        {},
-        { JWT_SECRET: TEST_SECRET }
-      )
-      expect(res.status).toBe(200)
-    })
-
-    it('should exempt /auth/seed-admin', async () => {
-      const app = createApp()
-      const res = await app.request(
-        createReq('POST', '/auth/seed-admin', {
           Cookie: 'auth_token=some-jwt',
         }),
         {},
