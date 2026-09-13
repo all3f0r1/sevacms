@@ -1,0 +1,26 @@
+/* Seva — thème public temple. Tokens uniquement, pas de layout ici. */
+:root {
+  --seva-bg: #f7f1e8;
+  --seva-bg-elevated: #fffaf2;
+  --seva-ink: #2b2118;
+  --seva-muted: #6b5a4a;
+  --seva-accent: #b45309;
+  --seva-accent-soft: #fde68a;
+  --seva-border: #e8d9c3;
+  --seva-serif: "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  --seva-sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+
+[data-theme="seva"] body {
+  background: var(--seva-bg);
+  color: var(--seva-ink);
+  font-family: var(--seva-sans);
+}
+
+[data-theme="seva"] h1,
+[data-theme="seva"] h2,
+[data-theme="seva"] h3 {
+  font-family: var(--seva-serif);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}

@@ -20,17 +20,15 @@ export function validateBindingsMiddleware(): MiddlewareFn {
       )
     }
 
-    // JWT_SECRET assertion — block all requests if using hardcoded default
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const accessTeam = (c.env as any).CF_ACCESS_TEAM_DOMAIN
     const jwtSecret = (c.env as any).JWT_SECRET
-    if (!jwtSecret || jwtSecret === JWT_SECRET_HARDCODED_DEFAULT) {
-      console.error('[Startup] FATAL: JWT_SECRET is not set or is using the hardcoded default. Run: wrangler secret put JWT_SECRET')
+    if (!accessTeam && (!jwtSecret || jwtSecret === JWT_SECRET_HARDCODED_DEFAULT)) {
+      console.error('[Startup] FATAL: set CF_ACCESS_TEAM_DOMAIN (Zero Trust) or JWT_SECRET for local dev')
       return c.json({
-        error: 'Service unavailable: JWT_SECRET must be configured — see wrangler secret put JWT_SECRET'
+        error: 'Service unavailable: configure Cloudflare Access (CF_ACCESS_TEAM_DOMAIN) or JWT_SECRET'
       }, 500)
     }
 
-    // KV is optional — warn only, don't block
     if (!(c.env as any).CACHE_KV) {
       console.warn('[Startup] CACHE_KV binding not configured — rate limiting disabled')
     }
