@@ -1,0 +1,19 @@
+---
+import { getLiveCollection } from 'astro:content'
+import Layout from '../../layouts/Layout.astro'
+
+const { slug } = Astro.params
+const entries = (await getLiveCollection('annonces' as any))?.entries || []
+const entry = entries.find((p: any) => p.data.slug === slug && p.data.status !== 'draft')
+if (!entry) return new Response(null, { status: 404, statusText: 'Not Found' })
+const item = entry.data
+---
+<Layout title={item.title} description={item.body?.slice?.(0, 160)}>
+  <article class="max-w-2xl mx-auto px-6 pt-12 pb-20" data-template="annonce">
+    <a href="/annonces" class="text-sm text-slate-500 mb-8 inline-block">← Annonces</a>
+    <p class="text-xs uppercase tracking-wide text-amber-800 mb-3">Annonce</p>
+    <h1 class="text-3xl mb-6">{item.title}</h1>
+    {item.pinned && <p class="text-sm mb-4">Épinglée</p>}
+    <div class="prose whitespace-pre-wrap">{item.body}</div>
+  </article>
+</Layout>

@@ -1,0 +1,21 @@
+---
+import { getLiveCollection } from 'astro:content'
+import Layout from '../../layouts/Layout.astro'
+
+const { slug } = Astro.params
+const entries = (await getLiveCollection('enseignements' as any))?.entries || []
+const entry = entries.find((p: any) => p.data.slug === slug && p.data.status !== 'draft')
+if (!entry) return new Response(null, { status: 404, statusText: 'Not Found' })
+const item = entry.data
+---
+<Layout title={item.title} description={item.excerpt}>
+  <article class="max-w-2xl mx-auto px-6 pt-12 pb-20" data-template="enseignement">
+    <a href="/enseignements" class="text-sm text-slate-500 mb-8 inline-block">← Enseignements</a>
+    <p class="text-xs uppercase tracking-wide text-amber-800 mb-3">Enseignement</p>
+    <h1 class="text-3xl mb-2">{item.title}</h1>
+    <p class="mb-8 text-slate-600">{item.speaker}{item.publishedAt ? ` · ${item.publishedAt}` : ''}</p>
+    {item.excerpt && <p class="text-lg mb-8">{item.excerpt}</p>}
+    {item.audioUrl && <p class="mb-8"><a href={item.audioUrl}>Écouter</a></p>}
+    {item.content && <div class="prose" set:html={item.content} />}
+  </article>
+</Layout>

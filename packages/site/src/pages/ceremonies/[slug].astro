@@ -1,0 +1,22 @@
+---
+import { getLiveCollection } from 'astro:content'
+import Layout from '../../layouts/Layout.astro'
+
+const { slug } = Astro.params
+const entries = (await getLiveCollection('ceremonies' as any))?.entries || []
+const entry = entries.find((p: any) => p.data.slug === slug && p.data.status !== 'draft')
+if (!entry) return new Response(null, { status: 404, statusText: 'Not Found' })
+const item = entry.data
+---
+<Layout title={item.title} description={item.place}>
+  <article class="max-w-2xl mx-auto px-6 pt-12 pb-20" data-template="ceremonie">
+    <a href="/ceremonies" class="text-sm text-slate-500 mb-8 inline-block">← Cérémonies</a>
+    <p class="text-xs uppercase tracking-wide text-amber-800 mb-3">Cérémonie</p>
+    <h1 class="text-3xl mb-4">{item.title}</h1>
+    {item.startsAt && <p class="mb-2">{item.startsAt}</p>}
+    {item.place && <p class="mb-2">{item.place}</p>}
+    {item.officiant && <p class="mb-6">Officiant : {item.officiant}</p>}
+    {item.poster && <img src={item.poster} alt="" class="w-full rounded-xl mb-8" />}
+    {item.description && <div class="prose" set:html={item.description} />}
+  </article>
+</Layout>
